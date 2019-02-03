@@ -1,7 +1,8 @@
+#!/usr/bin/python3
 # geektechstuff
 # Twitter Application
 
-import time
+import datetime
 
 # Twython is a Twitter Python library
 from twython import Twython
@@ -36,17 +37,22 @@ bmp280 = BMP280(i2c_dev=bus)
 def get_temp():
     temperature = bmp280.get_temperature()
     temperature = round(temperature)
+    temperature = str(temperature)
     return(temperature)
 
 def get_pressure():
     pressure = bmp280.get_pressure()
     pressure = round(pressure)
+    pressure = str(pressure)
     return(pressure)
 
 def write_tweet():
-    get_temp()
-    get_pressure()
-    tweet_to_send = "geektechstuff room currently at",temperature,"degrees celesius and",pressure,"bars"
+    tweet_to_send = "geektechstuff.com room currently at",get_temp(),"degrees celesius"
+    tweet_to_send = str(tweet_to_send)
     twitter.update_status(status=tweet_to_send)
-    return
+    return()
+
+def time_now():
+    now = datetime.datetime.now()
+    return(now)
 
