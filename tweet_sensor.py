@@ -1,6 +1,8 @@
-#!/usr/bin/python3
 # geektechstuff
 # Twitter Application
+
+# gpiozero for CPU
+from gpiozero import CPUTemperature
 
 import datetime
 
@@ -34,9 +36,16 @@ twitter = Twython(
 bus=SMBus(1)
 bmp280 = BMP280(i2c_dev=bus)
 
+def cpu_temperature():
+    cpu = CPUTemperature()
+    cpu_temp = cpu.temperature
+    cpu_temp = str(cpu_temp)
+    return(cpu_temp)
+
 def get_temp():
     temperature = bmp280.get_temperature()
     temperature = round(temperature)
+    temperature = temperature -2
     temperature = str(temperature)
     return(temperature)
 
@@ -47,12 +56,18 @@ def get_pressure():
     return(pressure)
 
 def write_tweet():
-    tweet_to_send = "geektechstuff.com room currently at",get_temp(),"degrees celesius"
+    get_temp()
+    get_pressure()
+    time_now()
+    cpu_temperature()               
+    tweet_to_send = "geektechstuff.com room currently at "+get_temp()+" degrees celesius.\nPressure is at "+get_pressure()+"  hectopascals.\nThe time is "+time_now()+"\nCPU temp is "+cpu_temperature()
     tweet_to_send = str(tweet_to_send)
     twitter.update_status(status=tweet_to_send)
     return()
 
 def time_now():
-    now = datetime.datetime.now()
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    now=str(now)
     return(now)
 
+write_tweet()
